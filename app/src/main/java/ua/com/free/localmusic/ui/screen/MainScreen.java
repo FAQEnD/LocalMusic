@@ -1,35 +1,20 @@
 package ua.com.free.localmusic.ui.screen;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.deezer.sdk.model.Album;
-import com.deezer.sdk.model.Permissions;
-import com.deezer.sdk.network.connect.DeezerConnect;
-import com.deezer.sdk.network.connect.SessionStore;
-import com.deezer.sdk.network.connect.event.DialogListener;
-import com.deezer.sdk.network.request.DeezerRequest;
-import com.deezer.sdk.network.request.DeezerRequestFactory;
-import com.deezer.sdk.network.request.event.JsonRequestListener;
-import com.deezer.sdk.network.request.event.RequestListener;
-
-import java.util.List;
-
 import ua.com.free.localmusic.R;
 import ua.com.free.localmusic.di.AppComponent;
 import ua.com.free.localmusic.ui.screen.base.BaseSelfInjectableScreen;
+import ua.com.free.localmusic.youtube.YoutubeAPI;
 
 public class MainScreen extends BaseSelfInjectableScreen
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -112,30 +97,12 @@ public class MainScreen extends BaseSelfInjectableScreen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final DeezerConnect deezerConnect = auth();
-        Log.d(TAG, "token: " + deezerConnect.getAccessToken());
-        Log.d(TAG, "expires in: " + deezerConnect.getAccessExpires());
-
-        final RequestListener requestListener = new JsonRequestListener() {
-
-            public void onResult(Object result, Object requestId) {
-                List<Album> albums = (List<Album>) result;
-
-                // do something with the albums
-            }
-
-            public void onUnparsedResult(String requestResponse, Object requestId) {}
-
-            public void onException(Exception e, Object requestId) {}
-        };
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                DeezerRequest deezerRequest = DeezerRequestFactory.requestArtistAlbums(11472);
-                deezerRequest.setId(1);
-                deezerConnect.requestAsync(deezerRequest, requestListener);
+
             }
         });
 
@@ -147,35 +114,15 @@ public class MainScreen extends BaseSelfInjectableScreen
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
 
-    @NonNull
-    private DeezerConnect auth() {
-        final DeezerConnect deezerConnect = new DeezerConnect(this, "242002");
-        String[] permissions = new String[] {
-                Permissions.BASIC_ACCESS,
-                Permissions.MANAGE_LIBRARY,
-                Permissions.LISTENING_HISTORY };
-
-// The listener for authentication events
-        DialogListener listener = new DialogListener() {
-
-            public void onComplete(Bundle values) {
-                Log.d(TAG, "token: " + deezerConnect.getAccessToken());
-                Log.d(TAG, "expires in: " + deezerConnect.getAccessExpires());
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                YoutubeAPI youtubeAPI = new YoutubeAPI();
+                youtubeAPI.search(getApplicationContext());
             }
-
-            public void onCancel() {}
-
-            public void onException(Exception e) {}
-        };
-
-// Launches the authentication process
-        SessionStore sessionStore = new SessionStore();
-        if (!sessionStore.restore(deezerConnect, this)) {
-            deezerConnect.authorize(this, permissions, listener);
-            sessionStore.save(deezerConnect, this);
-        }
-        return deezerConnect;
+        });
+        thread.start();
     }
+
 }
