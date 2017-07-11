@@ -18,6 +18,7 @@ package ua.com.free.localmusic.youtube;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.api.client.http.HttpRequest;
@@ -34,13 +35,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 /**
  * @author Anton Musiienko on 7/9/2017.
  */
 
 public class YoutubeAPI {
 
-    private static final String TAG = "YoutubeAPI";
     private static final String YOUTUBE_API_KEY = "AIzaSyBEmcUz19tz4R_HnV6aqMs-2VRBGNbQLK4";
     private static final String SEARCH_PARTS = "id,snippet";
     private static final String SEARCH_QUERY = "items(id/videoId,snippet/title,snippet/thumbnails/default/url)";
@@ -50,36 +52,39 @@ public class YoutubeAPI {
     private static final long SEARCH_MAX_RESULT = 10L;
     private static final String ALGORITHM_TYPE = "SHA-1";
 
-    public void search(final Context context, String searchQuery) {
-        YouTube youTube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
-
-            @Override
-            public void initialize(HttpRequest request) throws IOException {
-                String packageName = context.getPackageName();
-                String SHA1 = getSHA1(context, packageName);
-
-                request.getHeaders().set(HEADER_NAME_PACKAGE, packageName);
-                request.getHeaders().set(HEADER_NAME_CERTIFICATE, SHA1);
-            }
-        }).setApplicationName(context.getApplicationInfo().packageName).build();
-
+    public Observable<List<SearchResult>> search(final Context context, String searchQuery) {
+        YouTube youTube = buildYouTube(context);
+        YouTube.Search.List search;
         try {
-            YouTube.Search.List search = youTube.search().list(SEARCH_PARTS);
+            search = youTube.search().list(SEARCH_PARTS);
             search.setKey(YOUTUBE_API_KEY);
             search.setQ(searchQuery);
             search.setFields(SEARCH_QUERY);
             search.setMaxResults(SEARCH_MAX_RESULT);
-
-            // Restrict the search results to only include videos. See:
-            // https://developers.google.com/youtube/v3/docs/search/list#type
             search.setType(SEARCH_TYPE);
 
-            SearchListResponse searchResponse = search.execute();
-            List<SearchResult> searchResultList = searchResponse.getItems();
-            Log.d(TAG, searchResultList.toString());
+
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
+        return Observable.create(e -> {
+            SearchListResponse searchResponse = search.execute();
+            List<SearchResult> items = searchResponse.getItems();
+            e.onNext(items);
+            e.onComplete();
+        });
+    }
+
+    @NonNull
+    private YouTube buildYouTube(final Context context) {
+        return new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), request -> {
+            String packageName = context.getPackageName();
+            String SHA1 = getSHA1(context, packageName);
+
+            request.getHeaders().set(HEADER_NAME_PACKAGE, packageName);
+            request.getHeaders().set(HEADER_NAME_CERTIFICATE, SHA1);
+        }).setApplicationName(context.getApplicationInfo().packageName).build();
     }
 
     private String getSHA1(Context context, String packageName) {

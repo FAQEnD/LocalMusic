@@ -7,10 +7,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import ua.com.free.localmusic.R;
 import ua.com.free.localmusic.di.AppComponent;
 import ua.com.free.localmusic.ui.screen.base.BaseSelfInjectableScreen;
@@ -98,12 +100,8 @@ public class MainScreen extends BaseSelfInjectableScreen
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(view -> {
 
-            @Override
-            public void onClick(View view) {
-
-            }
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -115,14 +113,36 @@ public class MainScreen extends BaseSelfInjectableScreen
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                YoutubeAPI youtubeAPI = new YoutubeAPI();
-                youtubeAPI.search(getApplicationContext());
-            }
-        });
-        thread.start();
+//        Single.<List<SearchResult>>create(e -> {
+//            YoutubeAPI youtubeAPI = new YoutubeAPI();
+//            e.onSuccess(youtubeAPI.search(this, "Bring me the horizon"));
+//        })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe((searchResults, throwable) -> {
+//                    if (throwable == null) {
+//                        Log.d(TAG, searchResults.toString());
+//                    } else {
+//                        Log.e(TAG, throwable.getMessage());
+//                    }
+//                });
+
+
+//        Disposable disposable = Observable.<List<SearchResult>>create(e -> {
+//            YoutubeAPI youtubeAPI = new YoutubeAPI();
+//            e.onNext(youtubeAPI.search(this, "Bring me the horizon"));
+//            e.onComplete();
+//        })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(searchResults -> Log.d(TAG, searchResults.toString()));
+
+        YoutubeAPI youtubeAPI = new YoutubeAPI();
+        youtubeAPI.search(this, "Hurts")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(searchResults -> Log.d(TAG, searchResults.toString()))
+                .subscribe();
     }
 
 }
