@@ -8,6 +8,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import ua.com.free.localmusic.controller.MainScreenController;
+import ua.com.free.localmusic.controller.interfaces.IMainScreenController;
+import ua.com.free.localmusic.ui.screen.interfaces.IMainScreen;
 
 /**
  * @author anton.s.musiienko on 7/3/2017.
@@ -21,10 +24,11 @@ public class MainModule {
     public MainModule(Application application) {
         mApplication = application;
     }
+
     @Singleton
     @Provides
-    public SharedPreferences provideSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(mApplication);
+    public IMainScreenController provideMainScreenController() {
+        return new MainScreenController();
     }
 
 }

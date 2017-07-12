@@ -33,6 +33,8 @@ import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -62,11 +64,9 @@ public class YoutubeAPI {
             search.setFields(SEARCH_QUERY);
             search.setMaxResults(SEARCH_MAX_RESULT);
             search.setType(SEARCH_TYPE);
-
-
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return Observable.just(new ArrayList<>());
         }
         return Observable.create(e -> {
             SearchListResponse searchResponse = search.execute();

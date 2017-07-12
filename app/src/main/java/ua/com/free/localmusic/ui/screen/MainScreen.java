@@ -10,18 +10,29 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import ua.com.free.localmusic.R;
+import ua.com.free.localmusic.controller.interfaces.IMainScreenController;
 import ua.com.free.localmusic.di.AppComponent;
+import ua.com.free.localmusic.ui.screen.base.BaseScreen;
 import ua.com.free.localmusic.ui.screen.base.BaseSelfInjectableScreen;
+import ua.com.free.localmusic.ui.screen.interfaces.IMainScreen;
 import ua.com.free.localmusic.youtube.YoutubeAPI;
 
-public class MainScreen extends BaseSelfInjectableScreen
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainScreen extends BaseScreen
+        implements NavigationView.OnNavigationItemSelectedListener, IMainScreen {
 
     private static final String TAG = "MainScreen";
+
+    @Inject
+    IMainScreenController controller;
 
     @Override
     public void onBackPressed() {
@@ -93,17 +104,40 @@ public class MainScreen extends BaseSelfInjectableScreen
     }
 
     @Override
+    protected void setScreen() {
+        controller.setScreen(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lay_activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setFab();
+        setDrawer(toolbar);
 
+        YoutubeAPI youtubeAPI = new YoutubeAPI();
+        youtubeAPI.search(this, "Hurts")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(searchResults -> Log.d(TAG, searchResults.toString()))
+                .doOnError(throwable -> {
+                    Log.e(TAG, throwable.getMessage());
+                    Toast.makeText(this, throwable.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                })
+                .onErrorReturn(throwable -> new ArrayList<>())
+                .subscribe();
+    }
+
+    private void setFab() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
 
         });
+    }
 
+    private void setDrawer(Toolbar toolbar) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -112,37 +146,6 @@ public class MainScreen extends BaseSelfInjectableScreen
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-//        Single.<List<SearchResult>>create(e -> {
-//            YoutubeAPI youtubeAPI = new YoutubeAPI();
-//            e.onSuccess(youtubeAPI.search(this, "Bring me the horizon"));
-//        })
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe((searchResults, throwable) -> {
-//                    if (throwable == null) {
-//                        Log.d(TAG, searchResults.toString());
-//                    } else {
-//                        Log.e(TAG, throwable.getMessage());
-//                    }
-//                });
-
-
-//        Disposable disposable = Observable.<List<SearchResult>>create(e -> {
-//            YoutubeAPI youtubeAPI = new YoutubeAPI();
-//            e.onNext(youtubeAPI.search(this, "Bring me the horizon"));
-//            e.onComplete();
-//        })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(searchResults -> Log.d(TAG, searchResults.toString()));
-
-        YoutubeAPI youtubeAPI = new YoutubeAPI();
-        youtubeAPI.search(this, "Hurts")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(searchResults -> Log.d(TAG, searchResults.toString()))
-                .subscribe();
     }
 
 }
