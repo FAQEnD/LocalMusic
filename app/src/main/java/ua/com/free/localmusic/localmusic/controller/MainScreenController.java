@@ -38,7 +38,7 @@ public class MainScreenController extends BaseScreenController<IMainScreen> impl
 
     @Override
     public void askToSearchData(String query) {
-        Log.i(TAG, "asked to search data:" + query);
+        Log.i(TAG, "asked to search data: " + query);
         mYoutubeAPI.search(query)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -58,7 +58,7 @@ public class MainScreenController extends BaseScreenController<IMainScreen> impl
     }
 
     private void notifyOnError(Throwable throwable) {
-        Log.e(TAG, "going to notify user with error: " + throwable);
+        Log.e(TAG, "going to notify user with error: " + throwable.getLocalizedMessage());
         screen.notifyUser(throwable.getLocalizedMessage());
     }
 }
