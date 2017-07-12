@@ -7,13 +7,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class MainScreen extends BaseScreen
     IMainScreenController controller;
 
     private SongAdapter mSongAdapter;
+    private MaterialSearchView mSearchView;
 
     @Override
     public void onBackPressed() {
@@ -53,25 +55,8 @@ public class MainScreen extends BaseScreen
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
 
-        MenuItem myActionMenuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) myActionMenuItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (!searchView.isIconified()) {
-                    searchView.setIconified(true);
-                }
-                Toast.makeText(MainScreen.this, query, Toast.LENGTH_LONG).show();
-                myActionMenuItem.collapseActionView();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
+        MenuItem item = menu.findItem(R.id.action_search);
+        mSearchView.setMenuItem(item);
         return true;
     }
 
@@ -150,8 +135,27 @@ public class MainScreen extends BaseScreen
         setSupportActionBar(toolbar);
         setDrawer(toolbar);
         setRecyclerView();
+        setupSearchView();
         controller.onCreate(this);
         controller.askToSearchData("Bring me the horizon");
+    }
+
+    private void setupSearchView() {
+        mSearchView = (MaterialSearchView) findViewById(R.id.search_view);
+        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG, query);
+                controller.askToSearchData(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     private void setRecyclerView() {

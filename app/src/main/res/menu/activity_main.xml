@@ -4,10 +4,10 @@
 
     <item
         android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="always"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        android:title="Search"/>
+        android:icon="@drawable/ic_action_action_search"
+        android:orderInCategory="100"
+        android:title="Search.."
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
