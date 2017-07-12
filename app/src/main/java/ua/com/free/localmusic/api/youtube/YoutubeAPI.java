@@ -32,7 +32,7 @@ public class YoutubeAPI {
     private static final String SEARCH_TYPE = "video";
     private static final String HEADER_NAME_PACKAGE = "X-Android-Package";
     private static final String HEADER_NAME_CERTIFICATE = "X-Android-Cert";
-    private static final long SEARCH_MAX_RESULT = 10L;
+    private static final long SEARCH_MAX_RESULT = 50L;
     private static final String ALGORITHM_TYPE = "SHA-1";
 
     private YouTube mYouTube;

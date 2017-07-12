@@ -1,12 +1,10 @@
 package ua.com.free.localmusic.localmusic.ui.screen;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,7 +34,7 @@ public class MainScreen extends BaseScreen
     private static final String TAG = "MainScreen";
     @Inject
     IMainScreenController controller;
-    private RecyclerView mRecyclerView;
+
     private SongAdapter mSongAdapter;
 
     @Override
@@ -129,7 +127,6 @@ public class MainScreen extends BaseScreen
         setContentView(R.layout.lay_activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setFab();
         setDrawer(toolbar);
         setRecyclerView();
         controller.onCreate(this);
@@ -137,7 +134,7 @@ public class MainScreen extends BaseScreen
     }
 
     private void setRecyclerView() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mSongAdapter = new SongAdapter(new ArrayList<>(), new SongViewHolder.IViewHolderClickListener() {
 
             @Override
@@ -150,17 +147,9 @@ public class MainScreen extends BaseScreen
                 Log.d(TAG, "item with pos: " + pos + " was long clicked");
             }
         });
-        mRecyclerView.setAdapter(mSongAdapter);
+        recyclerView.setAdapter(mSongAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, layoutManager.getOrientation()));
-    }
-
-    private void setFab() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-
-        });
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     private void setDrawer(Toolbar toolbar) {
