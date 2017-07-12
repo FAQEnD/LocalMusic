@@ -1,5 +1,7 @@
 package ua.com.free.localmusic.localmusic.controller.interfaces;
 
+import android.content.Context;
+
 import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 
 /**
@@ -7,5 +9,9 @@ import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
  */
 
 public interface IMainScreenController extends IScreenController<IMainScreen> {
+
+    void onCreate(Context context);
+
+    void askToSearchData(String query);
 
 }

@@ -35,11 +35,16 @@ public class YoutubeAPI {
     private static final long SEARCH_MAX_RESULT = 10L;
     private static final String ALGORITHM_TYPE = "SHA-1";
 
-    public Observable<List<SearchResult>> search(final Context context, String searchQuery) {
-        YouTube youTube = buildYouTube(context);
+    private YouTube mYouTube;
+
+    public YoutubeAPI(Context context) {
+        mYouTube = buildYouTube(context);
+    }
+
+    public Observable<List<SearchResult>> search(String searchQuery) {
         YouTube.Search.List search;
         try {
-            search = youTube.search().list(SEARCH_PARTS);
+            search = mYouTube.search().list(SEARCH_PARTS);
             search.setKey(YOUTUBE_API_KEY);
             search.setQ(searchQuery);
             search.setFields(SEARCH_QUERY);
@@ -62,7 +67,6 @@ public class YoutubeAPI {
         return new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), request -> {
             String packageName = context.getPackageName();
             String SHA1 = getSHA1(context, packageName);
-
             request.getHeaders().set(HEADER_NAME_PACKAGE, packageName);
             request.getHeaders().set(HEADER_NAME_CERTIFICATE, SHA1);
         }).setApplicationName(context.getApplicationInfo().packageName).build();

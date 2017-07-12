@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import ua.com.free.localmusic.api.youtube.YoutubeAPI;
 import ua.com.free.localmusic.localmusic.controller.MainScreenController;
 import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
 
@@ -24,8 +25,14 @@ public class MainModule {
 
     @Singleton
     @Provides
-    public IMainScreenController provideMainScreenController() {
-        return new MainScreenController();
+    public IMainScreenController provideMainScreenController(YoutubeAPI youtubeAPI) {
+        return new MainScreenController(youtubeAPI);
+    }
+
+    @Provides
+    @Singleton
+    public YoutubeAPI provideYoutubeAPI() {
+        return new YoutubeAPI(mApplication);
     }
 
 }

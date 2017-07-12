@@ -5,12 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.api.services.youtube.model.SearchResult;
-
 import java.util.List;
 
 import ua.com.free.localmusic.R;
 import ua.com.free.localmusic.localmusic.ui.vh.SongViewHolder;
+import ua.com.free.localmusic.models.Song;
 
 /**
  * @author anton.s.musiienko on 7/12/2017.
@@ -18,10 +17,10 @@ import ua.com.free.localmusic.localmusic.ui.vh.SongViewHolder;
 
 public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {
 
-    private List<SearchResult> mSongs;
+    private List<Song> mSongs;
     private SongViewHolder.IViewHolderClickListener mClickListener;
 
-    public SongAdapter(List<SearchResult> songs, SongViewHolder.IViewHolderClickListener clickListener) {
+    public SongAdapter(List<Song> songs, SongViewHolder.IViewHolderClickListener clickListener) {
         mSongs = songs;
         mClickListener = clickListener;
     }
@@ -36,7 +35,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {
 
     @Override
     public void onBindViewHolder(SongViewHolder holder, int position) {
-        holder.mSongTitle.setText(mSongs.get(position).getSnippet().getTitle());
+        holder.mSongTitle.setText(mSongs.get(position).getTitle());
     }
 
     @Override
@@ -44,7 +43,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {
         return mSongs.size();
     }
 
-    public void setData(List<SearchResult> songs) {
+    public void setData(List<Song> songs) {
         mSongs = songs;
         notifyDataSetChanged();
     }

@@ -17,19 +17,18 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import ua.com.free.localmusic.R;
-import ua.com.free.localmusic.api.youtube.YoutubeAPI;
 import ua.com.free.localmusic.di.AppComponent;
 import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
 import ua.com.free.localmusic.localmusic.ui.adapter.SongAdapter;
 import ua.com.free.localmusic.localmusic.ui.screen.base.BaseScreen;
 import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 import ua.com.free.localmusic.localmusic.ui.vh.SongViewHolder;
+import ua.com.free.localmusic.models.Song;
 
 public class MainScreen extends BaseScreen
         implements NavigationView.OnNavigationItemSelectedListener, IMainScreen {
@@ -105,6 +104,16 @@ public class MainScreen extends BaseScreen
     }
 
     @Override
+    public void updateData(List<Song> songs) {
+        mSongAdapter.setData(songs);
+    }
+
+    @Override
+    public void notifyUser(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     protected void inject(AppComponent appComponent) {
         appComponent.inject(this);
     }
@@ -123,21 +132,8 @@ public class MainScreen extends BaseScreen
         setFab();
         setDrawer(toolbar);
         setRecyclerView();
-
-        YoutubeAPI youtubeAPI = new YoutubeAPI();
-        youtubeAPI.search(this, "Hurts")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(searchResults -> {
-                    Log.d(TAG, searchResults.toString());
-                    mSongAdapter.setData(searchResults);
-                })
-                .doOnError(throwable -> {
-                    Log.e(TAG, throwable.getMessage());
-                    Toast.makeText(this, throwable.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                })
-                .onErrorReturn(throwable -> new ArrayList<>())
-                .subscribe();
+        controller.onCreate(this);
+        controller.askToSearchData("Bring me the horizon");
     }
 
     private void setRecyclerView() {
