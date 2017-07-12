@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import ua.com.free.localmusic.di.module.MainModule;
-import ua.com.free.localmusic.ui.screen.MainScreen;
+import ua.com.free.localmusic.localmusic.ui.screen.MainScreen;
 
 /**
  * @author anton.s.musiienko on 7/3/2017.

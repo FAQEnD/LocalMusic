@@ -1,4 +1,4 @@
-package ua.com.free.localmusic.controller;
+package ua.com.free.localmusic.localmusic.controller;
 /*
  * Copyright (C) 2017 Funambol.
  * All Rights Reserved.  No use, copying or distribution of this
@@ -15,9 +15,9 @@ package ua.com.free.localmusic.controller;
  * THIS SOFTWARE OR ITS DERIVATIVES.
  */
 
-import ua.com.free.localmusic.controller.base.BaseScreenController;
-import ua.com.free.localmusic.controller.interfaces.IMainScreenController;
-import ua.com.free.localmusic.ui.screen.interfaces.IMainScreen;
+import ua.com.free.localmusic.localmusic.controller.base.BaseScreenController;
+import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
+import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 
 /**
  * @author anton.s.musiienko on 7/12/2017.

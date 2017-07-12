@@ -1,16 +1,13 @@
 package ua.com.free.localmusic.di.module;
 
 import android.app.Application;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ua.com.free.localmusic.controller.MainScreenController;
-import ua.com.free.localmusic.controller.interfaces.IMainScreenController;
-import ua.com.free.localmusic.ui.screen.interfaces.IMainScreen;
+import ua.com.free.localmusic.localmusic.controller.MainScreenController;
+import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
 
 /**
  * @author anton.s.musiienko on 7/3/2017.

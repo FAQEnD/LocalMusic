@@ -1,4 +1,4 @@
-package ua.com.free.localmusic.controller.interfaces;
+package ua.com.free.localmusic.localmusic.ui.screen.base;
 /*
  * Copyright (C) 2017 Funambol.
  * All Rights Reserved.  No use, copying or distribution of this
@@ -15,14 +15,20 @@ package ua.com.free.localmusic.controller.interfaces;
  * THIS SOFTWARE OR ITS DERIVATIVES.
  */
 
-import ua.com.free.localmusic.ui.screen.interfaces.IScreen;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 /**
  * @author anton.s.musiienko on 7/12/2017.
  */
 
-public interface IScreenController <T extends IScreen> {
+public abstract class BaseScreen extends BaseSelfInjectableScreen {
 
-    void setScreen(T screen);
+    protected abstract void setScreen();
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setScreen();
+    }
 }

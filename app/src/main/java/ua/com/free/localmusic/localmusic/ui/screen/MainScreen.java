@@ -1,4 +1,4 @@
-package ua.com.free.localmusic.ui.screen;
+package ua.com.free.localmusic.localmusic.ui.screen;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,11 +19,10 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import ua.com.free.localmusic.R;
-import ua.com.free.localmusic.controller.interfaces.IMainScreenController;
+import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
 import ua.com.free.localmusic.di.AppComponent;
-import ua.com.free.localmusic.ui.screen.base.BaseScreen;
-import ua.com.free.localmusic.ui.screen.base.BaseSelfInjectableScreen;
-import ua.com.free.localmusic.ui.screen.interfaces.IMainScreen;
+import ua.com.free.localmusic.localmusic.ui.screen.base.BaseScreen;
+import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 import ua.com.free.localmusic.youtube.YoutubeAPI;
 
 public class MainScreen extends BaseScreen

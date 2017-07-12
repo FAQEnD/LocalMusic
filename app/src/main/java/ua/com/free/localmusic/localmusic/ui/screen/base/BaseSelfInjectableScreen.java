@@ -1,4 +1,4 @@
-package ua.com.free.localmusic.ui.screen.base;
+package ua.com.free.localmusic.localmusic.ui.screen.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

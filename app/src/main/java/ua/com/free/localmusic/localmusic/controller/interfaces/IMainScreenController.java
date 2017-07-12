@@ -1,4 +1,4 @@
-package ua.com.free.localmusic.controller.base;
+package ua.com.free.localmusic.localmusic.controller.interfaces;
 /*
  * Copyright (C) 2017 Funambol.
  * All Rights Reserved.  No use, copying or distribution of this
@@ -15,19 +15,12 @@ package ua.com.free.localmusic.controller.base;
  * THIS SOFTWARE OR ITS DERIVATIVES.
  */
 
-import ua.com.free.localmusic.controller.interfaces.IScreenController;
-import ua.com.free.localmusic.ui.screen.interfaces.IScreen;
+import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 
 /**
  * @author anton.s.musiienko on 7/12/2017.
  */
 
-public abstract class BaseScreenController<T extends IScreen> implements IScreenController<T> {
-
-    protected T screen;
-
-    public void setScreen(T screen) {
-        this.screen = screen;
-    }
+public interface IMainScreenController extends IScreenController<IMainScreen> {
 
 }

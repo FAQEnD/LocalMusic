@@ -1,4 +1,4 @@
-package ua.com.free.localmusic.ui.screen.interfaces;
+package ua.com.free.localmusic.localmusic.ui.screen.interfaces;
 /*
  * Copyright (C) 2017 Funambol.
  * All Rights Reserved.  No use, copying or distribution of this
