@@ -6,10 +6,14 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,19 +23,22 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import ua.com.free.localmusic.R;
-import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
+import ua.com.free.localmusic.api.youtube.YoutubeAPI;
 import ua.com.free.localmusic.di.AppComponent;
+import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
+import ua.com.free.localmusic.localmusic.ui.adapter.SongAdapter;
 import ua.com.free.localmusic.localmusic.ui.screen.base.BaseScreen;
 import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
-import ua.com.free.localmusic.youtube.YoutubeAPI;
+import ua.com.free.localmusic.localmusic.ui.vh.SongViewHolder;
 
 public class MainScreen extends BaseScreen
         implements NavigationView.OnNavigationItemSelectedListener, IMainScreen {
 
     private static final String TAG = "MainScreen";
-
     @Inject
     IMainScreenController controller;
+    private RecyclerView mRecyclerView;
+    private SongAdapter mSongAdapter;
 
     @Override
     public void onBackPressed() {
@@ -115,18 +122,42 @@ public class MainScreen extends BaseScreen
         setSupportActionBar(toolbar);
         setFab();
         setDrawer(toolbar);
+        setRecyclerView();
 
         YoutubeAPI youtubeAPI = new YoutubeAPI();
         youtubeAPI.search(this, "Hurts")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(searchResults -> Log.d(TAG, searchResults.toString()))
+                .doOnNext(searchResults -> {
+                    Log.d(TAG, searchResults.toString());
+                    mSongAdapter.setData(searchResults);
+                })
                 .doOnError(throwable -> {
                     Log.e(TAG, throwable.getMessage());
                     Toast.makeText(this, throwable.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 })
                 .onErrorReturn(throwable -> new ArrayList<>())
                 .subscribe();
+    }
+
+    private void setRecyclerView() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mSongAdapter = new SongAdapter(new ArrayList<>(), new SongViewHolder.IViewHolderClickListener() {
+
+            @Override
+            public void onItemClick(int pos, View v) {
+                Log.d(TAG, "item with pos: " + pos + " was clicked");
+            }
+
+            @Override
+            public void onItemLongClick(int pos, View v) {
+                Log.d(TAG, "item with pos: " + pos + " was long clicked");
+            }
+        });
+        mRecyclerView.setAdapter(mSongAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, layoutManager.getOrientation()));
     }
 
     private void setFab() {
