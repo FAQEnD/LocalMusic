@@ -1,5 +1,7 @@
 package ua.com.free.localmusic.localmusic.ui.screen.interfaces;
 
+import android.content.Context;
+
 import java.util.List;
 
 import ua.com.free.localmusic.models.Song;
@@ -9,6 +11,8 @@ import ua.com.free.localmusic.models.Song;
  */
 
 public interface IMainScreen extends IScreen {
+
+    Context getContext();
 
     void updateData(List<Song> songs);
 

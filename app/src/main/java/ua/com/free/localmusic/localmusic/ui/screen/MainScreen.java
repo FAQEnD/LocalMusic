@@ -1,5 +1,6 @@
 package ua.com.free.localmusic.localmusic.ui.screen;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,10 +31,10 @@ import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 import ua.com.free.localmusic.localmusic.ui.vh.SongViewHolder;
 import ua.com.free.localmusic.models.Song;
 
-public class MainScreen extends BaseScreen
-        implements NavigationView.OnNavigationItemSelectedListener, IMainScreen {
+public class MainScreen extends BaseScreen implements NavigationView.OnNavigationItemSelectedListener, IMainScreen {
 
     private static final String TAG = "MainScreen";
+
     @Inject
     IMainScreenController controller;
 
@@ -128,6 +129,11 @@ public class MainScreen extends BaseScreen
     }
 
     @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lay_activity_main);
@@ -137,7 +143,6 @@ public class MainScreen extends BaseScreen
         setRecyclerView();
         setupSearchView();
         controller.onCreate(this);
-        controller.askToSearchData("Bring me the horizon");
     }
 
     private void setupSearchView() {
@@ -165,6 +170,8 @@ public class MainScreen extends BaseScreen
             @Override
             public void onItemClick(int pos, View v) {
                 Log.d(TAG, "item with pos: " + pos + " was clicked");
+                Song song = mSongAdapter.getSong(pos);
+                controller.askToDownloadSong(song.getId());
             }
 
             @Override
@@ -181,7 +188,7 @@ public class MainScreen extends BaseScreen
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

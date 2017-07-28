@@ -48,4 +48,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {
         notifyDataSetChanged();
     }
 
+    public Song getSong(int pos) {
+        if (pos < 0 || pos > getItemCount()) {
+            return null;
+        }
+        return mSongs.get(pos);
+    }
+
 }

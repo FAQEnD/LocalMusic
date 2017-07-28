@@ -14,4 +14,6 @@ public interface IMainScreenController extends IScreenController<IMainScreen> {
 
     void askToSearchData(String query);
 
+    void askToDownloadSong(String id);
+
 }
