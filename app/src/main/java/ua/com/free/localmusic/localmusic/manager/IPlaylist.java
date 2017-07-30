@@ -6,7 +6,7 @@ import ua.com.free.localmusic.models.Song;
  * @author Anton Musiienko on 7/30/2017.
  */
 
-public interface IPlaylistManager {
+public interface IPlaylist {
 
     Song getCurrent();
 
@@ -19,5 +19,9 @@ public interface IPlaylistManager {
     void onPrevious();
 
     void seekTo(int position);
+
+    int getCurrentPosition();
+
+    int getId();
 
 }

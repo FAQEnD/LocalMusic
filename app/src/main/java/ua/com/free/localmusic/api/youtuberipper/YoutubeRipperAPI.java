@@ -26,13 +26,17 @@ public class YoutubeRipperAPI {
      */
     public Observable<SongFromRipperServiceModel> getSongMetadata(String id) {
         return Observable.create(e -> {
-            Response<SongFromRipperServiceModel> response = mNetworkOperation.getSongMetadata(id);
-            if (response.isSuccessful() && response.body() != null) {
-                e.onNext(response.body());
-            } else {
-                e.onError(new IllegalStateException(response.message()));
+            try {
+                Response<SongFromRipperServiceModel> response = mNetworkOperation.getSongMetadata(id);
+                if (response.isSuccessful() && response.body() != null) {
+                    e.onNext(response.body());
+                } else {
+                    e.onError(new IllegalStateException(response.message()));
+                }
+                e.onComplete();
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
-            e.onComplete();
         });
     }
 

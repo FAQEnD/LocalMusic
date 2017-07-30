@@ -38,8 +38,10 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
     @Inject
     IMainScreenController controller;
 
+    private RecyclerView mRecyclerView;
     private SongAdapter mSongAdapter;
     private MaterialSearchView mSearchView;
+    private int mPreviousVHIndex;
 
     @Override
     public void onBackPressed() {
@@ -164,7 +166,7 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
     }
 
     private void setRecyclerView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mSongAdapter = new SongAdapter(new ArrayList<>(), new SongViewHolder.IViewHolderClickListener() {
 
             @Override
@@ -172,6 +174,17 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
                 Log.d(TAG, "item with pos: " + pos + " was clicked");
                 controller.askToUpdatePlaylist(mSongAdapter.getData());
                 controller.askToPlaySong(pos);
+                if (mPreviousVHIndex == pos) {
+                    SongViewHolder viewHolder = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(pos);
+                    boolean isPlaying = controller.isPlaying();
+                    viewHolder.imageButton.setSelected(isPlaying);
+                } else {
+                    SongViewHolder viewHolder = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(mPreviousVHIndex);
+                    viewHolder.imageButton.setSelected(false);
+                    SongViewHolder newVH = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(pos);
+                    newVH.imageButton.setSelected(true);
+                    mPreviousVHIndex = pos;
+                }
             }
 
             @Override
@@ -179,9 +192,9 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
                 Log.d(TAG, "item with pos: " + pos + " was long clicked");
             }
         });
-        recyclerView.setAdapter(mSongAdapter);
+        mRecyclerView.setAdapter(mSongAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(layoutManager);
     }
 
     private void setDrawer(Toolbar toolbar) {

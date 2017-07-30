@@ -10,7 +10,6 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import ua.com.free.localmusic.api.youtuberipper.YoutubeRipperAPI;
 import ua.com.free.localmusic.localmusic.controller.base.BaseScreenController;
 import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
 import ua.com.free.localmusic.localmusic.manager.IMediaPlayerManager;
@@ -67,6 +66,19 @@ public class MainScreenController extends BaseScreenController<IMainScreen> impl
     @Override
     public void askToPlayNextSong() {
         mMediaPlayerManager.playNext();
+    }
+
+    @Override
+    public int getCurrentTrackPosition() {
+        if (!mMediaPlayerManager.isPlaying()) {
+            return -1;
+        }
+        return mMediaPlayerManager.getCurrentTrackPos();
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return mMediaPlayerManager.isPlaying();
     }
 
     private void notifyDataChanged(List<SearchResult> results) {

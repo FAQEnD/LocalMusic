@@ -1,21 +1,28 @@
 package ua.com.free.localmusic.localmusic.manager.impl;
 
+import android.util.Log;
+
 import java.util.List;
 
-import ua.com.free.localmusic.localmusic.manager.IPlaylistManager;
+import ua.com.free.localmusic.localmusic.manager.IPlaylist;
 import ua.com.free.localmusic.models.Song;
 
 /**
  * @author Anton Musiienko on 7/30/2017.
  */
-public class PlaylistManager implements IPlaylistManager {
+public class Playlist implements IPlaylist {
 
+    private static final String TAG = "Playlist";
+
+    private int mId;
     private List<Song> mPlaylist;
     private int mSongIndex;
 
-    public PlaylistManager(List<Song> playlist) {
+    public Playlist(List<Song> playlist) {
+        mId = playlist.size() + playlist.get(0).getId().hashCode();
         mPlaylist = playlist;
-        mSongIndex = 0;
+        mSongIndex = -1;
+        Log.d(TAG, "playlist with ID: " + mId + " was created");
     }
 
     @Override
@@ -55,5 +62,15 @@ public class PlaylistManager implements IPlaylistManager {
     @Override
     public void seekTo(int position) {
         mSongIndex = position;
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return mSongIndex;
+    }
+
+    @Override
+    public int getId() {
+        return mId;
     }
 }

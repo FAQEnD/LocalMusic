@@ -23,4 +23,8 @@ public interface IMainScreenController extends IScreenController<IMainScreen> {
 
     void askToPlayNextSong();
 
+    int getCurrentTrackPosition();
+
+    boolean isPlaying();
+
 }

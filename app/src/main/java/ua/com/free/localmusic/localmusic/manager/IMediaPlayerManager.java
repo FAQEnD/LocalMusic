@@ -16,4 +16,8 @@ public interface IMediaPlayerManager {
 
     void playNext();
 
+    boolean isPlaying();
+
+    int getCurrentTrackPos();
+
 }
