@@ -22,7 +22,6 @@ public class Playlist implements IPlaylist {
         mId = playlist.size() + playlist.get(0).getId().hashCode();
         mPlaylist = playlist;
         mSongIndex = -1;
-        Log.d(TAG, "playlist with ID: " + mId + " was created");
     }
 
     @Override

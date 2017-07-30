@@ -10,6 +10,12 @@ import ua.com.free.localmusic.models.Song;
 
 public interface IMediaPlayerManager {
 
+    interface OnErrorListener {
+
+        void onError(int pos);
+
+    }
+
     void playSong(int pos);
 
     void setPlaylist(List<Song> playlist);
@@ -19,5 +25,7 @@ public interface IMediaPlayerManager {
     boolean isPlaying();
 
     int getCurrentTrackPos();
+
+    void setOnErrorListener(OnErrorListener onErrorListener);
 
 }

@@ -93,6 +93,7 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
                 break;
             case R.id.next:
                 controller.askToPlayNextSong();
+                updateViewHolderPlayPauseButton(controller.getCurrentTrackPosition());
                 break;
             case R.id.nav_manage:
 
@@ -121,6 +122,12 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
     }
 
     @Override
+    public void resetPlayPauseButton(int pos) {
+        SongViewHolder songViewHolder = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(pos);
+        songViewHolder.imageButton.setSelected(false);
+    }
+
+    @Override
     protected void inject(AppComponent appComponent) {
         appComponent.inject(this);
     }
@@ -145,6 +152,7 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
         setRecyclerView();
         setupSearchView();
         controller.onCreate(this);
+        mPreviousVHIndex = -1;
     }
 
     private void setupSearchView() {
@@ -174,17 +182,7 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
                 Log.d(TAG, "item with pos: " + pos + " was clicked");
                 controller.askToUpdatePlaylist(mSongAdapter.getData());
                 controller.askToPlaySong(pos);
-                if (mPreviousVHIndex == pos) {
-                    SongViewHolder viewHolder = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(pos);
-                    boolean isPlaying = controller.isPlaying();
-                    viewHolder.imageButton.setSelected(isPlaying);
-                } else {
-                    SongViewHolder viewHolder = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(mPreviousVHIndex);
-                    viewHolder.imageButton.setSelected(false);
-                    SongViewHolder newVH = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(pos);
-                    newVH.imageButton.setSelected(true);
-                    mPreviousVHIndex = pos;
-                }
+                updateViewHolderPlayPauseButton(pos);
             }
 
             @Override
@@ -195,6 +193,26 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
         mRecyclerView.setAdapter(mSongAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
+    }
+
+    private void updateViewHolderPlayPauseButton(int pos) {
+        if (mPreviousVHIndex == -1) {
+            SongViewHolder newVH = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(pos);
+            newVH.imageButton.setSelected(true);
+            mPreviousVHIndex = pos;
+            return;
+        }
+        if (mPreviousVHIndex == pos) {
+            SongViewHolder viewHolder = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(pos);
+            boolean isPlaying = controller.isPlaying();
+            viewHolder.imageButton.setSelected(isPlaying);
+        } else {
+            SongViewHolder viewHolder = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(mPreviousVHIndex);
+            viewHolder.imageButton.setSelected(false);
+            SongViewHolder newVH = (SongViewHolder) mRecyclerView.findViewHolderForAdapterPosition(pos);
+            newVH.imageButton.setSelected(true);
+            mPreviousVHIndex = pos;
+        }
     }
 
     private void setDrawer(Toolbar toolbar) {

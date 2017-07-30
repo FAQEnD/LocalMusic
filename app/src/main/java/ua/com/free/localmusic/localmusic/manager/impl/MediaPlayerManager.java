@@ -27,6 +27,7 @@ public class MediaPlayerManager implements IMediaPlayerManager, MediaPlayer.OnCo
     private MediaPlayer mMediaPlayer;
     private IPlaylist mPlaylist;
     private YoutubeRipperAPI mRipperAPI;
+    private OnErrorListener mOnErrorListener;
 
     public MediaPlayerManager(YoutubeRipperAPI ripperAPI) {
         mRipperAPI = ripperAPI;
@@ -64,19 +65,28 @@ public class MediaPlayerManager implements IMediaPlayerManager, MediaPlayer.OnCo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .doOnNext(this::playSongInternal)
-                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
-                .onErrorReturn(throwable -> null)
+                .doOnError(this::notifyUI)
+                .onErrorReturn(throwable -> new SongFromRipperServiceModel())
                 .subscribe();
     }
 
     private void playSongInternal(SongFromRipperServiceModel song) {
         try {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(song.getLink());
             mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void notifyUI(Throwable t) {
+        Log.e(TAG, t.getMessage());
+        mMediaPlayer.reset();
+        mOnErrorListener.onError(getCurrentTrackPos());
     }
 
     @Override
@@ -106,6 +116,11 @@ public class MediaPlayerManager implements IMediaPlayerManager, MediaPlayer.OnCo
     }
 
     @Override
+    public void setOnErrorListener(OnErrorListener onErrorListener) {
+        mOnErrorListener = onErrorListener;
+    }
+
+    @Override
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "media player completed to play song");
         playNext();
@@ -121,6 +136,7 @@ public class MediaPlayerManager implements IMediaPlayerManager, MediaPlayer.OnCo
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.e(TAG, "onError on media player was called. What: " + what + " extra: " + extra);
         mp.reset();
+        playRemoteTrack(mPlaylist.getCurrent());
         return true;
     }
 }

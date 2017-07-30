@@ -18,4 +18,6 @@ public interface IMainScreen extends IScreen {
 
     void notifyUser(String msg);
 
+    void resetPlayPauseButton(int pos);
+
 }

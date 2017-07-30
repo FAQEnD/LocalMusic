@@ -37,7 +37,10 @@ public class MainScreenController extends BaseScreenController<IMainScreen> impl
 
     @Override
     public void onCreate(Context context) {
-
+        mMediaPlayerManager.setOnErrorListener(pos -> {
+            screen.notifyUser("Can't play this track");
+            screen.resetPlayPauseButton(pos);
+        });
     }
 
     @Override

@@ -33,10 +33,11 @@ public class YoutubeRipperAPI {
                 } else {
                     e.onError(new IllegalStateException(response.message()));
                 }
-                e.onComplete();
             } catch (Throwable t) {
+                e.onError(t);
                 t.printStackTrace();
             }
+            e.onComplete();
         });
     }
 
