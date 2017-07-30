@@ -1,13 +1,10 @@
 package ua.com.free.localmusic.localmusic.controller;
 
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.google.api.services.youtube.model.SearchResult;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +13,9 @@ import io.reactivex.schedulers.Schedulers;
 import ua.com.free.localmusic.api.youtuberipper.YoutubeRipperAPI;
 import ua.com.free.localmusic.localmusic.controller.base.BaseScreenController;
 import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
+import ua.com.free.localmusic.localmusic.manager.IMediaPlayerManager;
 import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 import ua.com.free.localmusic.models.Song;
-import ua.com.free.localmusic.networkoperations.model.SongFromRipperServiceModel;
 import ua.com.free.localmusic.utils.ConvertUtils;
 import ua.com.free.localmusic.youtube.YoutubeAPI;
 
@@ -32,10 +29,13 @@ public class MainScreenController extends BaseScreenController<IMainScreen> impl
 
     private YoutubeAPI mYoutubeAPI;
     private YoutubeRipperAPI mRipperAPI;
+    private IMediaPlayerManager mMediaPlayerManager;
 
-    public MainScreenController(YoutubeAPI youtubeAPI, YoutubeRipperAPI ripperAPI) {
+    public MainScreenController(YoutubeAPI youtubeAPI, YoutubeRipperAPI ripperAPI,
+                                IMediaPlayerManager mediaPlayerManager) {
         mYoutubeAPI = youtubeAPI;
         mRipperAPI = ripperAPI;
+        mMediaPlayerManager = mediaPlayerManager;
     }
 
     @Override
@@ -56,30 +56,14 @@ public class MainScreenController extends BaseScreenController<IMainScreen> impl
     }
 
     @Override
-    public void askToDownloadSong(String id) {
-        Log.i(TAG, "asked to download data with id: " + id);
-        mRipperAPI.getSongMetadata(id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .doOnNext(this::playSong)
-                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
-                .onErrorReturn(throwable -> null)
-                .subscribe();
-
+    public void askToPlaySong(int pos) {
+        Log.i(TAG, "asked to play song with pos: " + pos);
+        mMediaPlayerManager.playSong(pos);
     }
 
-    private void playSong(SongFromRipperServiceModel song) {
-        Log.d(TAG, "song metadata: " + song);
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(song.getLink());
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    @Override
+    public void askToUpdatePlaylist(List<Song> playlist) {
+        mMediaPlayerManager.setPlaylist(playlist);
     }
 
     private void notifyDataChanged(List<SearchResult> results) {

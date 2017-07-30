@@ -170,8 +170,8 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
             @Override
             public void onItemClick(int pos, View v) {
                 Log.d(TAG, "item with pos: " + pos + " was clicked");
-                Song song = mSongAdapter.getSong(pos);
-                controller.askToDownloadSong(song.getId());
+                controller.askToUpdatePlaylist(mSongAdapter.getData());
+                controller.askToPlaySong(pos);
             }
 
             @Override

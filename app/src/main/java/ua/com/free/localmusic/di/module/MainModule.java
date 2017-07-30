@@ -9,6 +9,8 @@ import dagger.Provides;
 import ua.com.free.localmusic.api.youtuberipper.YoutubeRipperAPI;
 import ua.com.free.localmusic.localmusic.controller.MainScreenController;
 import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
+import ua.com.free.localmusic.localmusic.manager.IMediaPlayerManager;
+import ua.com.free.localmusic.localmusic.manager.impl.MediaPlayerManager;
 import ua.com.free.localmusic.networkoperations.INetworkOperation;
 import ua.com.free.localmusic.networkoperations.NetworkOperation;
 import ua.com.free.localmusic.youtube.YoutubeAPI;
@@ -28,8 +30,10 @@ public class MainModule {
 
     @Singleton
     @Provides
-    public IMainScreenController provideMainScreenController(YoutubeAPI youtubeAPI, YoutubeRipperAPI ripperAPI) {
-        return new MainScreenController(youtubeAPI, ripperAPI);
+    public IMainScreenController provideMainScreenController(YoutubeAPI youtubeAPI,
+                                                             YoutubeRipperAPI ripperAPI,
+                                                             IMediaPlayerManager mediaPlayerManager) {
+        return new MainScreenController(youtubeAPI, ripperAPI, mediaPlayerManager);
     }
 
     @Provides
@@ -48,6 +52,12 @@ public class MainModule {
     @Singleton
     public YoutubeRipperAPI provideYoutubeRipperAPI(INetworkOperation networkOperation) {
         return new YoutubeRipperAPI(networkOperation);
+    }
+
+    @Provides
+    @Singleton
+    public IMediaPlayerManager provideMediaPlayerManager(YoutubeRipperAPI ripperAPI) {
+        return new MediaPlayerManager(ripperAPI);
     }
 
 }

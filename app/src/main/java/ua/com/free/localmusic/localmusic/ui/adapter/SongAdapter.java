@@ -44,6 +44,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {
             holder.songSubtitle.setText(titleAndSubtitle[1].replaceAll(" ", ""));
         } else {
             holder.songTitle.setText(title);
+            holder.songSubtitle.setVisibility(View.GONE);
         }
     }
 
@@ -57,11 +58,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {
         notifyDataSetChanged();
     }
 
-    public Song getSong(int pos) {
-        if (pos < 0 || pos > getItemCount()) {
-            return null;
-        }
-        return mSongs.get(pos);
+    public List<Song> getData() {
+        return mSongs;
     }
 
 }
