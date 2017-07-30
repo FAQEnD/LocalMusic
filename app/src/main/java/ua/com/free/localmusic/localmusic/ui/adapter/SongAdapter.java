@@ -17,6 +17,7 @@ import ua.com.free.localmusic.models.Song;
 
 public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {
 
+    private static final String TITLE_SPLITTER = "-";
     private List<Song> mSongs;
     private SongViewHolder.IViewHolderClickListener mClickListener;
 
@@ -35,7 +36,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {
 
     @Override
     public void onBindViewHolder(SongViewHolder holder, int position) {
-        holder.mSongTitle.setText(mSongs.get(position).getTitle());
+        Song song = mSongs.get(position);
+        String title = song.getTitle();
+        if (title.contains(TITLE_SPLITTER)) {
+            String[] titleAndSubtitle = title.split(TITLE_SPLITTER);
+            holder.songTitle.setText(titleAndSubtitle[0].replaceAll(" ", ""));
+            holder.songSubtitle.setText(titleAndSubtitle[1].replaceAll(" ", ""));
+        } else {
+            holder.songTitle.setText(title);
+        }
     }
 
     @Override

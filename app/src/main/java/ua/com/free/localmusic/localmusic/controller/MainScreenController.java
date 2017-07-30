@@ -13,7 +13,6 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import ua.com.free.localmusic.api.youtube.YoutubeAPI;
 import ua.com.free.localmusic.api.youtuberipper.YoutubeRipperAPI;
 import ua.com.free.localmusic.localmusic.controller.base.BaseScreenController;
 import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
@@ -21,6 +20,7 @@ import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 import ua.com.free.localmusic.models.Song;
 import ua.com.free.localmusic.networkoperations.model.SongFromRipperServiceModel;
 import ua.com.free.localmusic.utils.ConvertUtils;
+import ua.com.free.localmusic.youtube.YoutubeAPI;
 
 /**
  * @author anton.s.musiienko on 7/12/2017.

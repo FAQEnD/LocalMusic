@@ -3,6 +3,7 @@ package ua.com.free.localmusic.localmusic.ui.vh;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ua.com.free.localmusic.R;
@@ -23,7 +24,9 @@ public class SongViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     }
 
-    public TextView mSongTitle;
+    public TextView songTitle;
+    public TextView songSubtitle;
+    public ImageButton imageButton;
 
     private IViewHolderClickListener mViewHolderClickListener;
 
@@ -31,7 +34,10 @@ public class SongViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         super(itemView);
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
-        mSongTitle = (TextView) itemView.findViewById(R.id.song_title);
+        songTitle = (TextView) itemView.findViewById(R.id.song_title);
+        songSubtitle = (TextView) itemView.findViewById(R.id.song_subtitle);
+        imageButton = (ImageButton) itemView.findViewById(R.id.song_play_pause_button);
+        imageButton.setOnClickListener(this);
     }
 
     public void setClickListener(IViewHolderClickListener viewHolderClickListener) {
