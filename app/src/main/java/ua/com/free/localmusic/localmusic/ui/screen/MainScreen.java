@@ -89,8 +89,8 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
             case R.id.nav_gallery:
 
                 break;
-            case R.id.nav_slideshow:
-
+            case R.id.next:
+                controller.askToPlayNextSong();
                 break;
             case R.id.nav_manage:
 

@@ -14,4 +14,6 @@ public interface IMediaPlayerManager {
 
     void setPlaylist(List<Song> playlist);
 
+    void playNext();
+
 }

@@ -72,9 +72,16 @@ public class MediaPlayerManager implements IMediaPlayerManager, MediaPlayer.OnCo
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp) {
+    public void playNext() {
+        Log.d(TAG, "going to play next song");
         mPlaylist.onNext();
         playRemoteTrack(mPlaylist.getCurrent());
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        Log.d(TAG, "media player completed to play song");
+        playNext();
     }
 
     @Override

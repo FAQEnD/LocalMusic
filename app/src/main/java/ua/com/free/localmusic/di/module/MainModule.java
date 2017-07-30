@@ -22,7 +22,7 @@ import ua.com.free.localmusic.youtube.YoutubeAPI;
 @Module
 public class MainModule {
 
-    Application mApplication;
+    private Application mApplication;
 
     public MainModule(Application application) {
         mApplication = application;
@@ -31,9 +31,8 @@ public class MainModule {
     @Singleton
     @Provides
     public IMainScreenController provideMainScreenController(YoutubeAPI youtubeAPI,
-                                                             YoutubeRipperAPI ripperAPI,
                                                              IMediaPlayerManager mediaPlayerManager) {
-        return new MainScreenController(youtubeAPI, ripperAPI, mediaPlayerManager);
+        return new MainScreenController(youtubeAPI, mediaPlayerManager);
     }
 
     @Provides

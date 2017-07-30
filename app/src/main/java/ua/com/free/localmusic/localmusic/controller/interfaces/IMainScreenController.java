@@ -21,4 +21,6 @@ public interface IMainScreenController extends IScreenController<IMainScreen> {
 
     void askToUpdatePlaylist(List<Song> playlist);
 
+    void askToPlayNextSong();
+
 }

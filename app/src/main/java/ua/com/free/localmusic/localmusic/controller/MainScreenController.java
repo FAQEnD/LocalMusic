@@ -28,13 +28,11 @@ public class MainScreenController extends BaseScreenController<IMainScreen> impl
     private static final String TAG = MainScreenController.class.getSimpleName();
 
     private YoutubeAPI mYoutubeAPI;
-    private YoutubeRipperAPI mRipperAPI;
     private IMediaPlayerManager mMediaPlayerManager;
 
-    public MainScreenController(YoutubeAPI youtubeAPI, YoutubeRipperAPI ripperAPI,
+    public MainScreenController(YoutubeAPI youtubeAPI,
                                 IMediaPlayerManager mediaPlayerManager) {
         mYoutubeAPI = youtubeAPI;
-        mRipperAPI = ripperAPI;
         mMediaPlayerManager = mediaPlayerManager;
     }
 
@@ -64,6 +62,11 @@ public class MainScreenController extends BaseScreenController<IMainScreen> impl
     @Override
     public void askToUpdatePlaylist(List<Song> playlist) {
         mMediaPlayerManager.setPlaylist(playlist);
+    }
+
+    @Override
+    public void askToPlayNextSong() {
+        mMediaPlayerManager.playNext();
     }
 
     private void notifyDataChanged(List<SearchResult> results) {
