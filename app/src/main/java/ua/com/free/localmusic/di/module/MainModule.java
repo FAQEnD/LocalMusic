@@ -6,12 +6,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ua.com.free.localmusic.api.youtube.YoutubeAPI;
 import ua.com.free.localmusic.api.youtuberipper.YoutubeRipperAPI;
 import ua.com.free.localmusic.localmusic.controller.MainScreenController;
 import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
 import ua.com.free.localmusic.networkoperations.INetworkOperation;
 import ua.com.free.localmusic.networkoperations.NetworkOperation;
+import ua.com.free.localmusic.youtube.YoutubeAPI;
 
 /**
  * @author anton.s.musiienko on 7/3/2017.

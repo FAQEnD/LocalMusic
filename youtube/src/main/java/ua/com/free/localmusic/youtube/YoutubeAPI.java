@@ -1,4 +1,4 @@
-package ua.com.free.localmusic.api.youtube;
+package ua.com.free.localmusic.youtube;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

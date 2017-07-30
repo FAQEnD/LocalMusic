@@ -1,1 +1,1 @@
-include ':app', ':networkoperations'
+include ':app', ':networkoperations', ':youtube'
