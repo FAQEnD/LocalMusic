@@ -24,6 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <service android:name=".localmusic.manager.impl.MediaPlayerService"/>
+
+
     </application>
 
 </manifest>

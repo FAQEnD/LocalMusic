@@ -2,6 +2,7 @@ package ua.com.free.localmusic.localmusic.controller.interfaces;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
@@ -20,6 +21,10 @@ public interface IMainScreenController extends IScreenController<IMainScreen> {
     void askToPlaySong(int pos);
 
     void askToUpdatePlaylist(List<Song> playlist);
+
+    void askToUpdatePlaylistAndPlay(List<Song> playlist, int position);
+
+    void startMediaPlayerService(Context context, ArrayList<Song> songs, int position);
 
     void askToPlayNextSong();
 

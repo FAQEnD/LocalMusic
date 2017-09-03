@@ -25,11 +25,13 @@ import javax.inject.Inject;
 import ua.com.free.localmusic.R;
 import ua.com.free.localmusic.di.AppComponent;
 import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
+import ua.com.free.localmusic.localmusic.manager.impl.MediaPlayerService;
 import ua.com.free.localmusic.localmusic.ui.adapter.SongAdapter;
 import ua.com.free.localmusic.localmusic.ui.screen.base.BaseScreen;
 import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 import ua.com.free.localmusic.localmusic.ui.vh.SongViewHolder;
 import ua.com.free.localmusic.models.Song;
+import ua.com.free.localmusic.utils.ServiceUtils;
 
 public class MainScreen extends BaseScreen implements NavigationView.OnNavigationItemSelectedListener, IMainScreen {
 
@@ -180,8 +182,14 @@ public class MainScreen extends BaseScreen implements NavigationView.OnNavigatio
             @Override
             public void onItemClick(int pos, View v) {
                 Log.d(TAG, "item with pos: " + pos + " was clicked");
-                controller.askToUpdatePlaylist(mSongAdapter.getData());
-                controller.askToPlaySong(pos);
+                if (ServiceUtils.isMyServiceRunning(MainScreen.this, MediaPlayerService.class)) {
+                    controller.askToUpdatePlaylistAndPlay(mSongAdapter.getData(), pos);
+                } else {
+                    controller.startMediaPlayerService(
+                            MainScreen.this,
+                            new ArrayList<>(mSongAdapter.getData()),
+                            pos);
+                }
                 updateViewHolderPlayPauseButton(pos);
             }
 

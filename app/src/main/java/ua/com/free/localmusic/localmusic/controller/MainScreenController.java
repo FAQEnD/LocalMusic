@@ -1,18 +1,24 @@
 package ua.com.free.localmusic.localmusic.controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.api.services.youtube.model.SearchResult;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import ua.com.free.localmusic.events.OnSetPlaylistAndPlayEvent;
 import ua.com.free.localmusic.localmusic.controller.base.BaseScreenController;
 import ua.com.free.localmusic.localmusic.controller.interfaces.IMainScreenController;
 import ua.com.free.localmusic.localmusic.manager.IMediaPlayerManager;
+import ua.com.free.localmusic.localmusic.manager.impl.MediaPlayerService;
+import ua.com.free.localmusic.localmusic.ui.screen.MainScreen;
 import ua.com.free.localmusic.localmusic.ui.screen.interfaces.IMainScreen;
 import ua.com.free.localmusic.models.Song;
 import ua.com.free.localmusic.utils.ConvertUtils;
@@ -64,6 +70,19 @@ public class MainScreenController extends BaseScreenController<IMainScreen> impl
     @Override
     public void askToUpdatePlaylist(List<Song> playlist) {
         mMediaPlayerManager.setPlaylist(playlist);
+    }
+
+    @Override
+    public void askToUpdatePlaylistAndPlay(List<Song> playlist, int position) {
+        EventBus.getDefault().post(new OnSetPlaylistAndPlayEvent(playlist, position));
+    }
+
+    @Override
+    public void startMediaPlayerService(Context context, ArrayList<Song> songs, int positions) {
+        Intent serviceIntent = new Intent(context, MediaPlayerService.class);
+        serviceIntent.putParcelableArrayListExtra(MediaPlayerService.PLAYLIST_KEY, songs);
+        serviceIntent.putExtra(MediaPlayerService.POSITION_KEY, positions);
+        context.startService(serviceIntent);
     }
 
     @Override
